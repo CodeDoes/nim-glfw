@@ -48,7 +48,9 @@ var vertices: array[0..2, Vertex] =
     Vertex(x:  0.6, y: -0.4, r: 0.0, g: 1.0, b: 0.0),
     Vertex(x:  0.0, y:  0.6, r: 0.0, g: 0.0, b: 1.0) ]
 
-let vertexShaderText = """uniform mat4 MVP;
+let vertexShaderText = """
+#version 110
+uniform mat4 MVP;
 attribute vec3 vCol;
 attribute vec2 vPos;
 varying vec3 color;
@@ -59,7 +61,9 @@ void main()
 }
 """
 
-let fragmentShaderText = """varying vec3 color;
+let fragmentShaderText = """
+#version 110
+varying vec3 color;
 void main()
 {
     gl_FragColor = vec4(color, 1.0);
@@ -128,11 +132,7 @@ proc draw(win: Window) =
   glViewport(0, 0, GLsizei(width), GLsizei(height))
   glClear(GL_COLOR_BUFFER_BIT)
 
-  var m = mat4x4[GLfloat](vec4(1'f32, 0'f32, 0'f32, 0'f32),
-                          vec4(0'f32, 1'f32, 0'f32, 0'f32),
-                          vec4(0'f32, 0'f32, 1'f32, 0'f32),
-                          vec4(0'f32, 0'f32, 0'f32, 1'f32))
-  m = m.rotate(normal, getTime())
+  var m = mat4[GLfloat](1.0).rotate(normal, getTime())
   var p = ortho[GLfloat](-ratio, ratio, -1.0, 1.0, 1.0, -1.0)
   var mvp = p * m
 
